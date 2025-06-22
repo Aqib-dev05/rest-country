@@ -1,5 +1,5 @@
 let container = document.querySelector(".card-container");
-let URL = "https://restcountries.com/v3.1/all";
+let URL = "https://restcountries.com/v3.1/all?fields=flags,name,population,region,capital";
 
 fetch(URL)
   .then((res) => {
@@ -12,7 +12,7 @@ fetch(URL)
           card.innerHTML = `
                     <img src=${country.flags.svg} alt="flag" />
                     <div class="card-text">
-                        <h2>${country.name.common}</h2>
+                        <h2>${(country.name.common.length <15) ? country.name.common : country.name.common.slice(0,15)+"..." }</h2>
                         <p><b>Population: </b>${country.population.toLocaleString()}</p>
                         <p><b>Region: </b>${country.region}</p>
                         <p><b>Capital: </b>${country.capital}</p>
@@ -36,3 +36,17 @@ fetch(URL)
     container.innerHTML = "";
     cards.forEach((card) => container.appendChild(card));
   };
+
+  document.querySelector("#inp").addEventListener("input",()=>{
+    let searchValue = document.querySelector("#inp").value.toLowerCase();
+    let cards = Array.from(container.querySelectorAll(".card"));
+    cards.forEach(card => {
+      let countryName = card.querySelector("h2").textContent.toLowerCase();
+      if (countryName.includes(searchValue)) {
+      card.style.display = "";
+      } else {
+      card.style.display = "none";
+      }
+    });
+
+  })
